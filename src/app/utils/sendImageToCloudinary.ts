@@ -3,8 +3,6 @@ import fs from 'fs';
 import multer from 'multer';
 import config from '../../config';
 
-// Todo this file is responsible for custom made function to upload image to cloudinary, receiving file using multer and deleting file from temporary folder. Read the following blog to get a comprehensive understanding https://dev.to/md_enayeturrahman_2560e3/how-to-save-image-with-multer-j74
-
 cloudinary.config({
   cloud_name: config.cloudinary_cloud_name,
   api_key: config.cloudinary_api_key,
@@ -13,7 +11,7 @@ cloudinary.config({
 
 export const sendImageToCloudinary = (
   imageName: string,
-  path: string,
+  path: string
 ): Promise<Record<string, unknown>> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
@@ -32,7 +30,7 @@ export const sendImageToCloudinary = (
             console.log('File is deleted.');
           }
         });
-      },
+      }
     );
   });
 };

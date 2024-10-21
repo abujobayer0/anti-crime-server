@@ -17,16 +17,17 @@ app.use(cookieParser());
 
 app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
 
-// application routes
-app.use('/api/v1', router); // /api/v1 will prefix all the route. This is the connection with the index.ts file inside the routes folder. 
+// Application routes
+app.use('/api/v1', router);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello from boiler plate code');
 });
 
-app.use(globalErrorHandler);  // This is connected with the globalErrorhandler.ts file at the middleware folder.
+// This is connected with the globalErrorhandler.ts file at the middleware folder.
+app.use(globalErrorHandler);
 
-//Not Found
-app.use(notFound);  // This is connected with the notFound.ts file at the middleware folder.
+// This is connected with the notFound.ts file at the middleware folder.
+app.use(notFound);
 
 export default app;

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-// Todo read my following blog to understand the code https://dev.to/md_enayeturrahman_2560e3/how-to-handle-errors-in-an-industry-grade-nodejs-application-217b
-
 
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
@@ -12,7 +10,6 @@ import handleValidationError from '../errors/handleValidationError';
 import handleZodError from '../errors/handleZodError';
 import { TErrorSources } from '../interface/error';
 import config from '../../config';
-// Todo without further modification you can use the code. If you want to customize the error message then you can do so. 
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.log(err.statusCode);
@@ -76,4 +73,3 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 export default globalErrorHandler;
-
