@@ -7,12 +7,12 @@ const router = express.Router();
 
 router.post(
   "/",
-  Auth(userRole.admin, userRole.user),
+  // Auth(userRole.admin, userRole.user),
   CrimeReportController.createCrimeReport
 );
 router.get(
   "/",
-  Auth(userRole.admin, userRole.user),
+  // Auth(userRole.admin, userRole.user),
   CrimeReportController.getAllCrimeReports
 );
 router.get(

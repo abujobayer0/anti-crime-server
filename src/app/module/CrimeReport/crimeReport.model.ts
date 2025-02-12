@@ -3,7 +3,7 @@ import { ICrimeReport } from "./crimeReport.interface";
 
 const crimeReportSchema = new mongoose.Schema<ICrimeReport>(
   {
-    userId: { type: String, required: true },
+    userId: { type: String, required: true, ref: "User" },
     title: { type: String, required: true },
     description: { type: String, required: true },
     images: [{ type: String }],

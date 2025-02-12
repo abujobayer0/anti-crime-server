@@ -4,12 +4,14 @@ import { CrimeReport } from "./crimeReport.model";
 import AppError from "../../errors/AppError";
 
 export class CrimeReportService {
-  static async createCrimeReport(data: ICrimeReport): Promise<ICrimeReport> {
+  static async createCrimeReport(
+    data: Partial<ICrimeReport>
+  ): Promise<ICrimeReport> {
     return await CrimeReport.create(data);
   }
 
   static async getAllCrimeReports(): Promise<ICrimeReport[]> {
-    return await CrimeReport.find({ isDeleted: false }).populate("comments");
+    return await CrimeReport.find({ isDeleted: false }).populate("userId");
   }
 
   static async getCrimeReportById(id: string): Promise<ICrimeReport | null> {
