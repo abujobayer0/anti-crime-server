@@ -11,10 +11,10 @@ const moduleRoutes = [
     path: "/auth",
     route: AuthRoutes,
   },
-  // {
-  //   path: "/users",
-  //   route: UserRoutes,
-  // },
+  {
+    path: "/reports",
+    route: CrimeReportRoutes,
+  },
 ];
 
 // This will automatically loop your routes that you will add in the moduleRoutes array
