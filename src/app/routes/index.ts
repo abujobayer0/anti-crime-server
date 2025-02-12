@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthRoutes } from "../module/Auth/auth.routes";
+import { ReportsRoutes } from "../module/reports/reports.routes";
 import { UserRoutes } from "../module/User/user.routes";
 import { CrimeReportRoutes } from "../module/CrimeReport/crimeReport.routes";
 
@@ -10,14 +11,10 @@ const moduleRoutes = [
     path: "/auth",
     route: AuthRoutes,
   },
-  {
-    path: "/users",
-    route: UserRoutes,
-  },
-  {
-    path: "/crime-reports",
-    route: CrimeReportRoutes,
-  },
+  // {
+  //   path: "/users",
+  //   route: UserRoutes,
+  // },
 ];
 
 // This will automatically loop your routes that you will add in the moduleRoutes array
