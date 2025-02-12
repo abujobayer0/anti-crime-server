@@ -2,12 +2,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import express, { Application, Request, Response } from 'express';
-import router from './app/routes';
-import notFound from './app/middlewares/notFound';
-import globalErrorHandler from './app/middlewares/globalErrorhandler';
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import express, { Application, Request, Response } from "express";
+import router from "./app/routes";
+import notFound from "./app/middlewares/notFound";
+import globalErrorHandler from "./app/middlewares/globalErrorhandler";
 
 const app: Application = express();
 
@@ -15,13 +15,13 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
+app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 
 // Application routes
-app.use('/api/v1', router);
+app.use("/api/v1", router);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from boiler plate code');
+app.get("/", (req: Request, res: Response) => {
+  res.send(`Hello Anti Crime Server on Port:${process.env.PORT}`);
 });
 
 // This is connected with the globalErrorhandler.ts file at the middleware folder.
