@@ -3,6 +3,8 @@ import express from "express";
 import validateRequest from "../../middlewares/validateRequest";
 import { AuthController } from "./auth.controller";
 import { UserValidation } from "./auth.validation";
+import { userRole } from "./auth.utils";
+import Auth from "../../middlewares/auth";
 
 const router = express.Router();
 
@@ -18,13 +20,14 @@ router.post(
   AuthController.login
 );
 
-// router.post("/reset-link", UserControllers.resetLink);
+router.post("/reset-link", AuthController.resetLink);
 
-// router.post("/forget-password", UserControllers.forgetPassword);
+router.post("/forgot-password", AuthController.forgetPassword);
 
-// router.post(
-//   "/change-password",
-//   Auth(USER_ROLE.ADMIN, USER_ROLE.USER),
-//   UserControllers.changePassword
-// );
+router.post(
+  "/change-password",
+  Auth(userRole.admin, userRole.user),
+  AuthController.changePassword
+);
+
 export const AuthRoutes = router;
