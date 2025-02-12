@@ -7,8 +7,8 @@ import { createToken } from "../../utils/tokenGenerateFunction";
 import { TUser } from "./auth.interface";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import UserModel from "./auth.model";
 import User from "./auth.model";
+import { sendEmail } from "../../utils/sendMail";
 
 const registerUserIntoDB = async (payload: Partial<TUser>) => {
   const existingUser = await User.findOne({ email: payload.email });
@@ -109,40 +109,38 @@ const loginUserFromDB = async (payload: Partial<TUser>) => {
   };
 };
 
-// const resetLinkIntoDB = async ({ email }: { email: string }) => {
-//   const user = await User.findOne({ email: email });
+const resetLinkIntoDB = async ({ email }: { email: string }) => {
+  const user = await User.findOne({ email: email });
 
-//   console.log(user);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found!");
+  }
 
-//   if (!user) {
-//     throw new AppError(httpStatus.NOT_FOUND, "This user is not found!");
-//   }
+  if (user.isDeleted === true) {
+    throw new AppError(httpStatus.FORBIDDEN, "This user is deleted!");
+  }
 
-//   if (user.isDeleted === true) {
-//     throw new AppError(httpStatus.FORBIDDEN, "This user is deleted!");
-//   }
+  if (user.isBanned) {
+    throw new AppError(httpStatus.FORBIDDEN, "This user is banned!");
+  }
 
-//   if (user.status == "BLOCKED") {
-//     throw new AppError(httpStatus.FORBIDDEN, "This user is blocked!");
-//   }
+  const jwtPayload = {
+    id: user._id,
+    email: user.email,
+    role: user.role,
+  };
 
-//   const jwtPayload = {
-//     id: user._id,
-//     email: user.email,
-//     role: user.role,
-//   };
+  const resetToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    "10m"
+  );
 
-//   const resetToken = createToken(
-//     jwtPayload,
-//     config.jwt_access_secret as string,
-//     "10m"
-//   );
+  const resetLink = `${config.reset_link_url}?email=${user.email}&token=${resetToken}`;
 
-//   const resetLink = `${config.reset_link_url}?email=${user.email}&token=${resetToken}`;
-
-//   // Send email to the user with the reset link
-//   await sendEmail(user.email, resetLink);
-// };
+  // Send email to the user with the reset link
+  await sendEmail(user.email, resetLink);
+};
 
 // const forgetPasswordIntoDB = async (payload: {
 //   email: string;

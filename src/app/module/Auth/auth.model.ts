@@ -3,13 +3,17 @@ import { TUser } from "./auth.interface";
 
 const UserSchema = new Schema<TUser>(
   {
-    name: { type: String, required: false },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    contract: { type: Number, required: false },
+    contract: { type: String, required: true },
     role: { type: String, enum: ["admin", "user"], default: "user" },
     isVerified: { type: Boolean, default: false },
-    profileImage: { type: String, default: "" },
+    profileImage: {
+      type: String,
+      default:
+        "https://st4.depositphotos.com/9998432/22670/v/450/depositphotos_226700620-stock-illustration-person-gray-photo-placeholder-woman.jpg",
+    },
     bio: { type: String, default: "N/A" },
     isBanned: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
