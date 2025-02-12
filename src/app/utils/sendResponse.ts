@@ -13,6 +13,8 @@ type TResponse<T> = {
   message?: string;
   meta?: TMeta;
   data?: T;
+  accessToken?: string;
+  refreshToken?: string;
 };
 
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {
