@@ -4,7 +4,7 @@ export interface TUser {
   name: string;
   email: string;
   password: string;
-  contract: string;
+  contact?: string;
   role: TUserRole;
   isVerified: boolean;
   profileImage: string;

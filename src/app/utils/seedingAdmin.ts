@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import User from "../module/Auth/auth.model";
+import { AuthServices } from "../module/Auth/auth.service";
 import { userRole } from "../module/Auth/auth.utils";
 
 export const seed = async () => {
@@ -7,19 +8,20 @@ export const seed = async () => {
     //atfirst check if the admin exist of not
     const admin = await User.findOne({
       role: userRole.admin,
-      email: "rijwanjannat36@gmail.com",
+      email: "zubayer.munna.dev@gmail.com",
       isBanned: false,
     });
     if (!admin) {
-      await User.create({
-        name: "Md Rijwan Jannat",
-        email: "rijwanjannat36@gmail.com",
+      await AuthServices.registerUserIntoDB({
+        name: "Abu Talha Md Jobayer",
+        email: "zubayer.munna.dev@gmail.com",
         password: "Admin123",
+        contact: "+8801717171717",
         role: userRole.admin || "admin",
-        profileImage:
-          "https://oldweb.brur.ac.bd/wp-content/uploads/2019/03/male.jpg",
+        profileImage: "https://i.ibb.co.com/39pHJZ94/IMG-0870.jpg",
         isVerified: true,
       });
+
       console.log("Admin created successfully...");
       console.log("Seeding completed...");
     }

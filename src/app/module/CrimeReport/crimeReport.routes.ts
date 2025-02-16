@@ -17,17 +17,17 @@ router.get(
 );
 router.get(
   "/:id",
-  Auth(userRole.admin, userRole.user),
+  // Auth(userRole.admin, userRole.user),
   CrimeReportController.getCrimeReportById
 );
 router.patch(
   "/:id",
-  Auth(userRole.admin, userRole.user),
+  // Auth(userRole.admin, userRole.user),
   CrimeReportController.updateCrimeReport
 );
 router.delete(
   "/:id",
-  Auth(userRole.admin, userRole.user),
+  // Auth(userRole.admin, userRole.user),
   CrimeReportController.deleteCrimeReport
 );
 

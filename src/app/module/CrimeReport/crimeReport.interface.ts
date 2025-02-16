@@ -13,4 +13,6 @@ export interface ICrimeReport {
   comments: string[];
   isDeleted: boolean;
   updatedAt?: Date;
+  districtCoordinates: number[];
+  divisionCoordinates: number[];
 }

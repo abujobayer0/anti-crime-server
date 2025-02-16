@@ -19,6 +19,8 @@ const crimeReportSchema = new mongoose.Schema<ICrimeReport>(
     ],
     isDeleted: { type: Boolean, default: false },
     updatedAt: { type: Date, default: Date.now },
+    districtCoordinates: { type: [String], default: [] },
+    divisionCoordinates: { type: [String], default: [] },
   },
   { timestamps: true }
 );

@@ -8,8 +8,8 @@ import express, { Application, Request, Response } from "express";
 import router from "./app/routes";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorhandler";
-import { generateCrimeSceneReport, ImageToTextActivity } from "./hooks/reports";
 import morgan from "morgan";
+import { NvidiaImageDescription } from "./hooks/nvidia.mistralai.mistral-7b-v.0.3";
 const app: Application = express();
 app.use(morgan("dev"));
 
@@ -26,56 +26,41 @@ app.get("/", (req: Request, res: Response) => {
   res.send(`Hello Anti Crime Server on Port:${process.env.PORT}`);
 });
 
-app.post("/analyze", async (req: Request, res: Response): Promise<any> => {
-  const { imageUrl, division, district, crime_time } = req.body;
+app.post("/analyze", async (req: Request, res: Response) => {
+  const { imageUrl, division, district } = req.body;
 
-  // Validate required parameters
-  if (!imageUrl) {
-    console.log(" mandatory parameter");
+  const requiredParams = {
+    imageUrl,
+    division,
+    district,
+  };
 
-    return res
-      .status(400)
-      .json({ error: "Missing required parameter: imageUrl" });
-  }
-  if (!division) {
-    console.log(" mandatory parameter");
-    return res
-      .status(400)
-      .json({ error: "Missing required parameter: division" });
-  }
-  if (!district) {
-    console.log(" mandatory parameter");
-
-    return res
-      .status(400)
-      .json({ error: "Missing required parameter: district" });
+  for (const [param, value] of Object.entries(requiredParams)) {
+    if (!value) {
+      console.log(`${param} is a mandatory parameter`);
+      return res.status(400).json({
+        error: `Missing required parameter: ${param}`,
+      });
+    }
   }
 
   try {
-    const generated_text = await ImageToTextActivity(imageUrl);
-    if (!generated_text) {
-      return res
-        .status(400)
-        .json({ error: "Failed to extract text from image" });
-    }
-    const crimeReportModel = {
-      generated_text_from_image: generated_text,
-      division: division,
-      district: district,
-      crime_time: crime_time,
-    };
-    const report = await generateCrimeSceneReport(crimeReportModel);
+    const report = await NvidiaImageDescription(
+      imageUrl[0],
+      division,
+      district
+    );
 
-    return res.status(200).json({ report, generated_text });
+    return res.status(200).json({ report });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to generate the report" });
   }
-}); // This is connected with the globalErrorhandler.ts file at the middleware folder.
+});
+
 app.use(globalErrorHandler);
 
 // This is connected with the notFound.ts file at the middleware folder.
 app.use(notFound);
 
 export default app;
-``;

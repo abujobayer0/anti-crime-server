@@ -14,4 +14,6 @@ export const crimeReportValidation = z.object({
   downvotes: z.array(z.string()).optional(),
   comments: z.array(z.string()).optional(),
   isDeleted: z.boolean().default(false),
+  districtCoordinates: z.array(z.number()),
+  divisionCoordinates: z.array(z.number()),
 });

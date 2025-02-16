@@ -3,7 +3,7 @@ import { z } from "zod";
 export const registerUserValidationSchema = z.object({
   body: z.object({
     name: z.string({ required_error: "Name is required" }),
-    contract: z.string({ required_error: "Contact number is required" }),
+    contact: z.string().optional(),
     email: z
       .string()
       .email("Invalid email address")
