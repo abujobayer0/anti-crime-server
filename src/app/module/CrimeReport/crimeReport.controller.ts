@@ -15,6 +15,35 @@ export class CrimeReportController {
     });
   });
 
+  static analyzeCrimeReport = catchAsync(
+    async (req: Request, res: Response) => {
+      const report = await CrimeReportService.analyzeCrimeReport(
+        req.body as {
+          imageUrl: string[];
+          division: string;
+          district: string;
+        }
+      );
+
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Crime report analyzed successfully",
+        data: report,
+      });
+    }
+  );
+
+  static queryCrimeReports = catchAsync(async (req: Request, res: Response) => {
+    const reports = await CrimeReportService.queryCrimeReports(req.query);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Crime reports fetched successfully",
+      data: reports,
+    });
+  });
+
   static getAllCrimeReports = catchAsync(
     async (req: Request, res: Response) => {
       const reports = await CrimeReportService.getAllCrimeReports();

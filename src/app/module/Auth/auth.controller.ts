@@ -46,6 +46,19 @@ const forgetPassword = catchAsync(async (req, res) => {
   });
 });
 
+const getMe = catchAsync(async (req, res) => {
+  const result = await AuthServices.getMeFromDB({
+    email: (req.user as { email: string }).email,
+    reports: req.query.reports === "true" ? true : false,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User fetched successfully",
+    data: result,
+  });
+});
 const changePassword = catchAsync(async (req, res) => {
   const token = req.headers.authorization;
   const result = await AuthServices.changePasswordIntoDB(
@@ -67,4 +80,5 @@ export const AuthController = {
   resetLink,
   forgetPassword,
   changePassword,
+  getMe,
 };

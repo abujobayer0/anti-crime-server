@@ -9,6 +9,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "./auth.model";
 import { sendEmail } from "../../utils/sendMail";
+import { CrimeReport } from "../CrimeReport/crimeReport.model";
+import { ICrimeReport } from "../CrimeReport/crimeReport.interface";
 
 const registerUserIntoDB = async (payload: Partial<TUser>) => {
   const existingUser = await User.findOne({ email: payload.email });
@@ -238,10 +240,31 @@ const changePasswordIntoDB = async (
   return result;
 };
 
+const getMeFromDB = async (payload: { email: string; reports: boolean }) => {
+  const user = await User.findOne({ email: payload.email }).select("-password");
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const data: { user: TUser; userReports?: ICrimeReport[] } = {
+    user,
+  };
+
+  if (payload.reports) {
+    const userReports = await CrimeReport.find({ userId: user._id })
+      .populate("userId")
+      .sort({ createdAt: -1 });
+    data.userReports = userReports;
+  }
+  return data;
+};
+
 export const AuthServices = {
   registerUserIntoDB,
   loginUserFromDB,
   resetLinkIntoDB,
   forgotPasswordIntoDB,
   changePasswordIntoDB,
+  getMeFromDB,
 };

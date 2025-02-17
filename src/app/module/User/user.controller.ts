@@ -37,6 +37,7 @@ export class UserController {
 
   static async updateUserById(req: Request, res: Response) {
     const { id } = req.params;
+
     const updatedUser = await UserService.updateUserById(id, req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -45,7 +46,6 @@ export class UserController {
       data: updatedUser,
     });
   }
-
   static async deleteUserById(req: Request, res: Response) {
     const { id } = req.params;
     await UserService.deleteUserById(id);

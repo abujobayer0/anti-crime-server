@@ -7,27 +7,45 @@ const router = express.Router();
 
 router.post(
   "/",
-  // Auth(userRole.admin, userRole.user),
+  Auth(userRole.admin, userRole.user),
   CrimeReportController.createCrimeReport
+);
+
+router.post(
+  "/analyze",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.analyzeCrimeReport
+);
+
+router.post(
+  "/analyze",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.analyzeCrimeReport
 );
 router.get(
   "/",
-  // Auth(userRole.admin, userRole.user),
+  Auth(userRole.admin, userRole.user),
   CrimeReportController.getAllCrimeReports
 );
 router.get(
+  "/query",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.queryCrimeReports
+);
+
+router.get(
   "/:id",
-  // Auth(userRole.admin, userRole.user),
+  Auth(userRole.admin, userRole.user),
   CrimeReportController.getCrimeReportById
 );
 router.patch(
   "/:id",
-  // Auth(userRole.admin, userRole.user),
+  Auth(userRole.admin, userRole.user),
   CrimeReportController.updateCrimeReport
 );
 router.delete(
   "/:id",
-  // Auth(userRole.admin, userRole.user),
+  Auth(userRole.admin, userRole.user),
   CrimeReportController.deleteCrimeReport
 );
 

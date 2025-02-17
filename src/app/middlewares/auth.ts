@@ -12,13 +12,20 @@ const Auth = (...requiredRoles: (keyof typeof userRole)[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
     console.log("Received Token:", token);
+
     // checking if the token is missing
     if (!token) {
       throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
     }
 
+    // Extract the token without "Bearer " prefix
+    const tokenWithoutBearer = token.split(" ")[1];
+    if (!tokenWithoutBearer) {
+      throw new AppError(httpStatus.UNAUTHORIZED, "Invalid token format!");
+    }
+
     const decoded = verifyToken(
-      token,
+      tokenWithoutBearer,
       config.jwt_access_secret as string
     ) as JwtPayload;
 
@@ -26,14 +33,14 @@ const Auth = (...requiredRoles: (keyof typeof userRole)[]) => {
 
     console.log("decoded user=> ", decoded);
 
-    // checking if the user is exist
+    // checking if the user exists
     const user = await User.findOne({ email: email });
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
     }
-    // checking if the user is already deleted
 
+    // checking if the user is banned
     if (user?.isBanned) {
       throw new AppError(httpStatus.FORBIDDEN, "This user is banned!");
     }
