@@ -17,7 +17,6 @@ router.get(
 router.patch(
   "/:id",
   Auth(userRole.admin, userRole.user),
-  Auth(userRole.admin),
   UserController.updateUserById
 );
 

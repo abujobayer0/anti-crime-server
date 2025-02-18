@@ -19,7 +19,7 @@ export class CrimeReportController {
     async (req: Request, res: Response) => {
       const report = await CrimeReportService.analyzeCrimeReport(
         req.body as {
-          imageUrl: string[];
+          images: Express.Multer.File[];
           division: string;
           district: string;
         }
@@ -36,6 +36,7 @@ export class CrimeReportController {
 
   static queryCrimeReports = catchAsync(async (req: Request, res: Response) => {
     const reports = await CrimeReportService.queryCrimeReports(req.query);
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -90,6 +91,34 @@ export class CrimeReportController {
       statusCode: httpStatus.OK,
       success: true,
       message: "Crime report deleted successfully",
+    });
+  });
+
+  static toggleUpvote = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const result = await CrimeReportService.toggleUpvote(id, userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Vote updated successfully",
+      data: result,
+    });
+  });
+
+  static toggleDownvote = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const result = await CrimeReportService.toggleDownvote(id, userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Vote updated successfully",
+      data: result,
     });
   });
 }

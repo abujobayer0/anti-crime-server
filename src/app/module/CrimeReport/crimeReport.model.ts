@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { ICrimeReport } from "./crimeReport.interface";
 
-const crimeReportSchema = new mongoose.Schema<ICrimeReport>(
+const crimeReportSchema = new Schema<ICrimeReport>(
   {
     userId: { type: String, required: true, ref: "User" },
     title: { type: String, required: true },
@@ -12,8 +12,8 @@ const crimeReportSchema = new mongoose.Schema<ICrimeReport>(
     district: { type: String, required: true },
     postTime: { type: Date, required: true },
     crimeTime: { type: Date, required: true },
-    upvotes: [{ type: String, default: [] }],
-    downvotes: [{ type: String, default: [] }],
+    upvotes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    downvotes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: [] },
     ],

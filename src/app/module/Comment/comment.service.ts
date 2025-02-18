@@ -6,24 +6,57 @@ import { CrimeReport } from "../CrimeReport/crimeReport.model";
 
 export class CommentService {
   static async createComment(
-    id: string,
+    reportId: string,
     userId: string,
-    data: Partial<IComment>
+    data: {
+      comment: string;
+      proofImage?: string[];
+      replyTo?: string;
+    }
   ): Promise<IComment | null> {
-    const report = await CrimeReport.findById(id);
-
+    const report = await CrimeReport.findById(reportId);
     if (!report) {
       throw new AppError(httpStatus.NOT_FOUND, "Crime Report not found");
     }
-    const comment = await Comment.create({
-      ...data,
-      userId,
-    });
 
-    return await CrimeReport.findByIdAndUpdate(
-      id,
+    const commentData: Partial<IComment> = {
+      comment: data.comment,
+      proofImage: data.proofImage || [],
+      userId,
+      reportId,
+    };
+
+    if (data.replyTo) {
+      const parentComment = await Comment.findById(data.replyTo);
+      if (!parentComment) {
+        throw new AppError(httpStatus.NOT_FOUND, "Parent comment not found");
+      }
+
+      const replyComment = await Comment.create(commentData);
+
+      await Comment.findByIdAndUpdate(
+        data.replyTo,
+        {
+          $push: { replyTo: replyComment._id },
+        },
+        { new: true }
+      );
+
+      return replyComment;
+    }
+
+    const comment = await Comment.create(commentData);
+
+    const updatedReport = await CrimeReport.findByIdAndUpdate(
+      reportId,
       { $push: { comments: comment._id } },
       { new: true }
     );
+
+    if (!updatedReport) {
+      throw new AppError(httpStatus.NOT_FOUND, "Failed to update crime report");
+    }
+
+    return comment;
   }
 }

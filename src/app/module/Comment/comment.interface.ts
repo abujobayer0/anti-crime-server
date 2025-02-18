@@ -8,4 +8,5 @@ export interface IComment {
   proofImage: string[];
   proofVideo: string[];
   replyTo: string[];
+  commentId?: string;
 }

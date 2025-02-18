@@ -22,13 +22,14 @@ router.post(
   Auth(userRole.admin, userRole.user),
   CrimeReportController.analyzeCrimeReport
 );
+
 router.get(
   "/",
   Auth(userRole.admin, userRole.user),
   CrimeReportController.getAllCrimeReports
 );
 router.get(
-  "/query",
+  "/q",
   Auth(userRole.admin, userRole.user),
   CrimeReportController.queryCrimeReports
 );
@@ -47,6 +48,18 @@ router.delete(
   "/:id",
   Auth(userRole.admin, userRole.user),
   CrimeReportController.deleteCrimeReport
+);
+
+router.post(
+  "/:id/upvote",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.toggleUpvote
+);
+
+router.post(
+  "/:id/downvote",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.toggleDownvote
 );
 
 export const CrimeReportRoutes = router;

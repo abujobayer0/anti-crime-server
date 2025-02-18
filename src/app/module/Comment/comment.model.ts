@@ -4,7 +4,7 @@ import { IComment } from "./comment.interface";
 const commentSchema = new mongoose.Schema<IComment>(
   {
     userId: { type: String, required: true, ref: "User" },
-    comment: { type: String, required: true },
+    comment: { type: String, required: true, default: "" },
     reportId: { type: String, required: true, ref: "CrimeReport" },
     proofImage: [{ type: String }],
     proofVideo: [{ type: String }],
