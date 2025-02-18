@@ -3,6 +3,8 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { CrimeReportService } from "./crimeReport.service";
+import AppError from "../../errors/AppError";
+import { ObjectId } from "mongoose";
 
 export class CrimeReportController {
   static createCrimeReport = catchAsync(async (req: Request, res: Response) => {
@@ -41,6 +43,32 @@ export class CrimeReportController {
       statusCode: httpStatus.OK,
       success: true,
       message: "Crime reports fetched successfully",
+      data: reports,
+    });
+  });
+
+  static getUserReports = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id as ObjectId;
+
+    if (!userId) {
+      throw new AppError(httpStatus.UNAUTHORIZED, "User ID not found");
+    }
+
+    const reports = await CrimeReportService.getUserReports(userId);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User reports fetched successfully",
+      data: reports,
+    });
+  });
+
+  static getRecentReports = catchAsync(async (req: Request, res: Response) => {
+    const reports = await CrimeReportService.getRecentReports();
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Recent reports fetched successfully",
       data: reports,
     });
   });

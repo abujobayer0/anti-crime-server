@@ -28,10 +28,21 @@ router.get(
   Auth(userRole.admin, userRole.user),
   CrimeReportController.getAllCrimeReports
 );
+
 router.get(
   "/q",
   Auth(userRole.admin, userRole.user),
   CrimeReportController.queryCrimeReports
+);
+router.get(
+  "/recent-reports",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.getRecentReports
+);
+router.get(
+  "/user-reports",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.getUserReports
 );
 
 router.get(
@@ -39,6 +50,7 @@ router.get(
   Auth(userRole.admin, userRole.user),
   CrimeReportController.getCrimeReportById
 );
+
 router.patch(
   "/:id",
   Auth(userRole.admin, userRole.user),

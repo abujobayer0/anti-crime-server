@@ -5,6 +5,9 @@ import AppError from "../../errors/AppError";
 import QueryBuilder from "../../builder/queryBuilder";
 import { NvidiaImageDescription } from "../../../hooks/nvidia.neva-22b";
 import { COMMENT_POPULATE_CONFIG } from "./crimeReport.config";
+import User from "../Auth/auth.model";
+import { TUser } from "../Auth/auth.interface";
+import { ObjectId } from "mongoose";
 
 export class CrimeReportService {
   static async createCrimeReport(
@@ -33,6 +36,37 @@ export class CrimeReportService {
     if (!report)
       throw new AppError(httpStatus.NOT_FOUND, "Crime Report not found");
     return report;
+  }
+
+  static async getUserReports(userId: ObjectId) {
+    const userReports = await CrimeReport.find({ userId })
+      .populate("userId")
+      .sort({ createdAt: -1 });
+
+    if (!userReports) {
+      throw new AppError(httpStatus.NOT_FOUND, "User reports not found");
+    }
+
+    return userReports;
+  }
+
+  static async getRecentReports() {
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+
+    const recentReports = await CrimeReport.find({
+      createdAt: { $gte: twentyFourHoursAgo },
+    })
+      .populate("userId")
+      .sort({ createdAt: -1 });
+
+    if (!recentReports.length) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        "No reports found in the past 24 hours"
+      );
+    }
+
+    return recentReports;
   }
 
   static async updateCrimeReport(

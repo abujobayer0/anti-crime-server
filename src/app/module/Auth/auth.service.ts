@@ -149,7 +149,6 @@ const forgotPasswordIntoDB = async (payload: {
   newPassword: string;
   token: string;
 }) => {
-  console.log("payload=>", payload);
   const user = await User.findOne({ email: payload?.email });
 
   if (!user) {
@@ -198,7 +197,6 @@ const changePasswordIntoDB = async (
   payload: { email: string; newPassword: string },
   token: string
 ) => {
-  console.log(payload);
   const user = await User.findOne({ email: payload?.email });
 
   if (!user) {
@@ -240,31 +238,10 @@ const changePasswordIntoDB = async (
   return result;
 };
 
-const getMeFromDB = async (payload: { email: string; reports: boolean }) => {
-  const user = await User.findOne({ email: payload.email }).select("-password");
-
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  const data: { user: TUser; userReports?: ICrimeReport[] } = {
-    user,
-  };
-
-  if (payload.reports) {
-    const userReports = await CrimeReport.find({ userId: user._id })
-      .populate("userId")
-      .sort({ createdAt: -1 });
-    data.userReports = userReports;
-  }
-  return data;
-};
-
 export const AuthServices = {
   registerUserIntoDB,
   loginUserFromDB,
   resetLinkIntoDB,
   forgotPasswordIntoDB,
   changePasswordIntoDB,
-  getMeFromDB,
 };

@@ -19,7 +19,6 @@ router.post(
   validateRequest(UserValidation.loginUserValidationSchema),
   AuthController.login
 );
-router.get("/me", Auth(userRole.admin, userRole.user), AuthController.getMe);
 
 router.post("/reset-link", AuthController.resetLink);
 

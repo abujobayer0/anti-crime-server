@@ -23,7 +23,6 @@ export const seed = async () => {
       });
 
       console.log("Admin created successfully...");
-      console.log("Seeding completed...");
     }
   } catch (error) {
     console.log("Error in seeding", error);

@@ -11,7 +11,6 @@ import User from "../module/Auth/auth.model";
 const Auth = (...requiredRoles: (keyof typeof userRole)[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
-    console.log("Received Token:", token);
 
     // checking if the token is missing
     if (!token) {
@@ -28,10 +27,8 @@ const Auth = (...requiredRoles: (keyof typeof userRole)[]) => {
       tokenWithoutBearer,
       config.jwt_access_secret as string
     ) as JwtPayload;
-
+    console.log(decoded, "decoded");
     const { role, email, iat } = decoded;
-
-    console.log("decoded user=> ", decoded);
 
     // checking if the user exists
     const user = await User.findOne({ email: email });
