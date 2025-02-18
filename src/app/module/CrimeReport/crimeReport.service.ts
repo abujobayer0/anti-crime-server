@@ -93,21 +93,21 @@ export class CrimeReportService {
   }
 
   static async analyzeCrimeReport(data: {
-    images: Express.Multer.File[];
+    imageUrl: string[];
     division: string;
     district: string;
   }) {
-    const { images, division, district } = data;
-    const fs = require("fs").promises;
+    const { imageUrl, division, district } = data;
 
     const requiredParams = {
-      images,
+      imageUrl,
       division,
       district,
     };
 
     for (const [param, value] of Object.entries(requiredParams)) {
       if (!value) {
+        console.log(`${param} is a mandatory parameter`);
         throw new AppError(
           httpStatus.BAD_REQUEST,
           `Missing required parameter: ${param}`
@@ -116,29 +116,13 @@ export class CrimeReportService {
     }
 
     try {
-      const reports = [];
+      const report = await NvidiaImageDescription(
+        imageUrl[0] as string,
+        division as string,
+        district as string
+      );
 
-      // Process each image sequentially
-      for (const image of images) {
-        try {
-          // Process image with PHI Vision model
-          const report = await NvidiaImageDescription(
-            image.path,
-            division,
-            district
-          );
-          reports.push(report);
-
-          // Clean up - remove the processed image
-          await fs.unlink(image.path);
-        } catch (error) {
-          // If error occurs during processing, still try to remove the file
-          await fs.unlink(image.path).catch(console.error);
-          throw error;
-        }
-      }
-
-      return reports;
+      return report;
     } catch (err) {
       console.error(err);
       throw new AppError(

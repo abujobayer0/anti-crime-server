@@ -19,7 +19,7 @@ export class CrimeReportController {
     async (req: Request, res: Response) => {
       const report = await CrimeReportService.analyzeCrimeReport(
         req.body as {
-          images: Express.Multer.File[];
+          imageUrl: string[];
           division: string;
           district: string;
         }
