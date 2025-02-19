@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
@@ -9,7 +10,7 @@ import router from "./app/routes";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorhandler";
 import morgan from "morgan";
-import { NvidiaImageDescription } from "./hooks/nvidia.neva-22b";
+
 const app: Application = express();
 app.use(morgan("dev"));
 
@@ -17,7 +18,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://anti-crime.vercel.app"],
+    credentials: true,
+  })
+);
 
 // Application routes
 app.use("/api/v1", router);
