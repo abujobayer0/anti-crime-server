@@ -62,6 +62,21 @@ export class CrimeReportController {
       data: reports,
     });
   });
+  static getProfileReports = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.params.userId;
+
+    if (!userId) {
+      throw new AppError(httpStatus.UNAUTHORIZED, "User ID not found");
+    }
+
+    const reports = await CrimeReportService.getProfileReports(userId);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User reports fetched successfully",
+      data: reports,
+    });
+  });
 
   static getRecentReports = catchAsync(async (req: Request, res: Response) => {
     const reports = await CrimeReportService.getRecentReports();

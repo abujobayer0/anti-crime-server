@@ -50,6 +50,18 @@ export class CrimeReportService {
     return userReports;
   }
 
+  static async getProfileReports(userId: string) {
+    const userReports = await CrimeReport.find({ userId })
+      .populate("userId")
+      .sort({ createdAt: -1 });
+
+    if (!userReports) {
+      throw new AppError(httpStatus.NOT_FOUND, "User reports not found");
+    }
+
+    return userReports;
+  }
+
   static async getRecentReports() {
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours in milliseconds
 
@@ -60,10 +72,7 @@ export class CrimeReportService {
       .sort({ createdAt: -1 });
 
     if (!recentReports.length) {
-      throw new AppError(
-        httpStatus.NOT_FOUND,
-        "No reports found in the past 24 hours"
-      );
+      return [];
     }
 
     return recentReports;

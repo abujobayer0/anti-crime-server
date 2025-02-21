@@ -44,6 +44,11 @@ router.get(
   Auth(userRole.admin, userRole.user),
   CrimeReportController.getUserReports
 );
+router.get(
+  "/profile-reports/:userId",
+  Auth(userRole.admin, userRole.user),
+  CrimeReportController.getProfileReports
+);
 
 router.get(
   "/:id",
