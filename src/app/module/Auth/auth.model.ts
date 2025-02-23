@@ -11,8 +11,12 @@ const UserSchema = new Schema<TUser>(
     isVerified: { type: Boolean, default: false },
     profileImage: {
       type: String,
+      default: "https://i.ibb.co.com/39NgCZb8/images-1.png",
+    },
+    coverImage: {
+      type: String,
       default:
-        "https://st4.depositphotos.com/9998432/22670/v/450/depositphotos_226700620-stock-illustration-person-gray-photo-placeholder-woman.jpg",
+        "https://i.ibb.co.com/fzsxJRcd/canva-pink-minimalist-watercolor-background-linkedin-banner-Uub-SLOW3-Y3-M.jpg",
     },
     bio: { type: String, default: "N/A" },
     isBanned: { type: Boolean, default: false },

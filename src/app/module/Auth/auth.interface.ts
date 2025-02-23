@@ -6,6 +6,7 @@ export interface TUser {
   password: string;
   contact?: string;
   role: TUserRole;
+  coverImage: string;
   isVerified: boolean;
   profileImage: string;
   bio: string;
