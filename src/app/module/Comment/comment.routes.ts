@@ -8,6 +8,7 @@ const router = Router();
 router.post(
   "/:reportId/comment",
   Auth(userRole.admin, userRole.user),
+
   CommentController.createComment
 );
 router.patch(

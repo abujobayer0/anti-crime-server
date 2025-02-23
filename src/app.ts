@@ -12,7 +12,7 @@ import globalErrorHandler from "./app/middlewares/globalErrorhandler";
 import morgan from "morgan";
 
 const app: Application = express();
-app.use(morgan("dev"));
+app.use(morgan("tiny"));
 
 //parsers
 app.use(express.json());

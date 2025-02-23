@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 import app from "./app";
 import config from "./config";
 import { seed } from "./app/utils/seedingAdmin";
-
+import redisService from "./config/redis";
 let server: Server;
 
 async function main() {
   try {
     await mongoose.connect(config.DATABASE_URL as string);
-
+    await redisService.connect();
     server = app.listen(config.port, () => {
       console.log(`app is listening on port ${config.port}`);
     });
