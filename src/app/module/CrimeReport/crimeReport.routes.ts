@@ -17,12 +17,6 @@ router.post(
   CrimeReportController.analyzeCrimeReport
 );
 
-router.post(
-  "/analyze",
-  Auth(userRole.admin, userRole.user),
-  CrimeReportController.analyzeCrimeReport
-);
-
 router.get(
   "/",
   Auth(userRole.admin, userRole.user),
@@ -30,10 +24,11 @@ router.get(
 );
 
 router.get(
-  "/q",
-  Auth(userRole.admin, userRole.user),
+  "/query",
+  // Auth(userRole.admin, userRole.user),
   CrimeReportController.queryCrimeReports
 );
+
 router.get(
   "/recent-reports",
   Auth(userRole.admin, userRole.user),

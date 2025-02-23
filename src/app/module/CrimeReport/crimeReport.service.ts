@@ -17,12 +17,7 @@ export class CrimeReportService {
   }
 
   static async getAllCrimeReports(): Promise<ICrimeReport[]> {
-    return await CrimeReport.find({ isDeleted: false })
-      .populate("userId")
-      .populate(COMMENT_POPULATE_CONFIG)
-      .populate("upvotes")
-      .populate("downvotes")
-      .sort({ createdAt: -1 });
+    return await this.getAlgorithmicReports();
   }
 
   static async getCrimeReportById(id: string): Promise<ICrimeReport | null> {
@@ -100,39 +95,84 @@ export class CrimeReportService {
       throw new AppError(httpStatus.NOT_FOUND, "Crime Report not found");
   }
 
-  static async queryCrimeReports(query: Record<string, unknown>) {
+  static async queryCrimeReports(query: string) {
+    type SearchResult = {
+      type: "report" | "user";
+      data: ICrimeReport | TUser;
+      algorithmScore?: number;
+    };
+
     const crimeReportQuery = CrimeReport.find({ isDeleted: false })
-      .populate("userId")
+      .populate({
+        path: "userId",
+        select: "name email",
+      })
       .populate(COMMENT_POPULATE_CONFIG)
       .populate("upvotes")
       .populate("downvotes");
 
-    if (query.startDate && query.endDate) {
-      crimeReportQuery.find({
-        crimeTime: {
-          $gte: new Date(query.startDate as string),
-          $lte: new Date(query.endDate as string),
-        },
-      });
+    const userQuery = User.find({ isBanned: false }).select("-password");
 
-      delete query.startDate;
-      delete query.endDate;
-    }
+    const crimeReportBuilder = new QueryBuilder(crimeReportQuery, {
+      searchTerm: query,
+    }).search(["title", "description", "division", "district"]);
 
-    const crimeReportBuilder = new QueryBuilder(crimeReportQuery, query)
-      .search(["title", "description", "division", "district"])
-      .filter()
-      .sort()
-      .paginate()
-      .fields();
+    const userBuilder = new QueryBuilder(userQuery, {
+      searchTerm: query,
+    }).search(["name", "email"]);
 
-    const result = await crimeReportBuilder.modelQuery;
-    const meta = await crimeReportBuilder.countTotal();
+    const reports = await crimeReportBuilder.modelQuery;
+    const users = await userBuilder.modelQuery;
 
-    return {
-      data: result,
-      meta,
-    };
+    const scoredReports = reports.map((report) => {
+      let score = 0;
+
+      const upvotes = report.upvotes.length;
+      const downvotes = report.downvotes.length;
+      const totalVotes = upvotes + downvotes;
+
+      if (totalVotes > 0) {
+        const z = 1.96;
+        const p = upvotes / totalVotes;
+        const denominator = totalVotes + z * z;
+        const center = (p + (z * z) / (2 * totalVotes)) / denominator;
+        const uncertainty =
+          z *
+          Math.sqrt((p * (1 - p) + (z * z) / (4 * totalVotes)) / denominator);
+        const voteScore = center - uncertainty;
+        score += voteScore * 1000;
+      }
+
+      const hoursAge =
+        (Date.now() - report.createdAt.getTime()) / (1000 * 60 * 60);
+      const timeDecay = 1 / (1 + Math.log(hoursAge + 1));
+      score *= timeDecay;
+
+      const commentCount = report.comments?.length || 0;
+      const commentBonus = Math.log(commentCount + 1) * 100;
+      score += commentBonus;
+
+      const queryLower = query.toLowerCase();
+      if (report.title?.toLowerCase().includes(queryLower)) score *= 1.5;
+      if (report.description?.toLowerCase().includes(queryLower)) score *= 1.3;
+      if (report.division?.toLowerCase().includes(queryLower)) score *= 1.2;
+      if (report.district?.toLowerCase().includes(queryLower)) score *= 1.2;
+
+      return {
+        type: "report" as const,
+        data: report,
+        algorithmScore: Math.round(score * 100) / 100,
+      };
+    });
+
+    const results: SearchResult[] = [
+      ...scoredReports.sort(
+        (a, b) => (b.algorithmScore || 0) - (a.algorithmScore || 0)
+      ),
+      ...users.map((user) => ({ type: "user" as const, data: user })),
+    ];
+
+    return results;
   }
 
   static async analyzeCrimeReport(data: {
@@ -218,5 +258,64 @@ export class CrimeReportService {
 
   static async toggleDownvote(reportId: string, userId: string) {
     return await this.toggleVote(reportId, userId, "downvote");
+  }
+
+  static async getAlgorithmicReports() {
+    const reports = await CrimeReport.find({ isDeleted: false })
+      .populate("userId")
+      .populate(COMMENT_POPULATE_CONFIG)
+      .populate("upvotes")
+      .populate("downvotes");
+
+    const scoredReports = reports.map((report) => {
+      let score = 0;
+
+      const upvotes = report.upvotes.length;
+      const downvotes = report.downvotes.length;
+      const totalVotes = upvotes + downvotes;
+
+      if (totalVotes === 0) {
+        score += 0;
+      } else {
+        const z = 1.96;
+        const p = upvotes / totalVotes;
+        const denominator = totalVotes + z * z;
+        const center = (p + (z * z) / (2 * totalVotes)) / denominator;
+        const uncertainty =
+          z *
+          Math.sqrt((p * (1 - p) + (z * z) / (4 * totalVotes)) / denominator);
+        const voteScore = center - uncertainty;
+        score += voteScore * 1000;
+      }
+
+      const hoursAge =
+        (Date.now() - report.createdAt.getTime()) / (1000 * 60 * 60);
+      const timeDecay = 1 / (1 + Math.log(hoursAge + 1));
+      score *= timeDecay;
+
+      const commentCount = report.comments?.length || 0;
+      const commentBonus = Math.log(commentCount + 1) * 100;
+      score += commentBonus;
+
+      if (upvotes > 0 && downvotes > 0) {
+        const controversyBonus = Math.min(upvotes, downvotes) * 10;
+        score += controversyBonus;
+      }
+
+      const recentActivityBonus = 0;
+      score += recentActivityBonus;
+
+      return {
+        report,
+        score: Math.round(score * 100) / 100,
+      };
+    });
+
+    return scoredReports
+      .sort((a, b) => b.score - a.score)
+      .map((item) => ({
+        ...item.report.toObject(),
+        algorithmScore: item.score,
+      }));
   }
 }

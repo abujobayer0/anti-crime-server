@@ -15,4 +15,5 @@ export interface ICrimeReport {
   updatedAt?: Date;
   districtCoordinates: number[];
   divisionCoordinates: number[];
+  createdAt: Date;
 }

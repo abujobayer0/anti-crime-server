@@ -37,7 +37,8 @@ export class CrimeReportController {
   );
 
   static queryCrimeReports = catchAsync(async (req: Request, res: Response) => {
-    const reports = await CrimeReportService.queryCrimeReports(req.query);
+    const query = req.query.searchTerm as string;
+    const reports = await CrimeReportService.queryCrimeReports(query);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
