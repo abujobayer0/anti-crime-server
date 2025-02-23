@@ -59,4 +59,19 @@ export class CommentService {
 
     return comment;
   }
+
+  static async updateComment(
+    commentId: string,
+    data: Partial<IComment>
+  ): Promise<IComment | null> {
+    const comment = await Comment.findByIdAndUpdate(commentId, data, {
+      new: true,
+    });
+    return comment;
+  }
+
+  static async deleteComment(commentId: string): Promise<IComment | null> {
+    const comment = await Comment.findByIdAndDelete(commentId);
+    return comment;
+  }
 }

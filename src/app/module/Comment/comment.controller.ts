@@ -20,4 +20,26 @@ export class CommentController {
       data: comment,
     });
   });
+
+  static updateComment = catchAsync(async (req: Request, res: Response) => {
+    const { commentId } = req.params;
+    const comment = await CommentService.updateComment(commentId, req.body);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Comment updated successfully",
+      data: comment,
+    });
+  });
+  static deleteComment = catchAsync(async (req: Request, res: Response) => {
+    const { commentId } = req.params;
+    const comment = await CommentService.deleteComment(commentId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Comment deleted successfully",
+      data: comment,
+    });
+  });
 }
