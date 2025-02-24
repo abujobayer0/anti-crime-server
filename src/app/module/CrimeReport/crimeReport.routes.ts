@@ -22,7 +22,6 @@ router.post(
 router.get(
   "/",
   Auth(userRole.admin, userRole.user),
-  cacheMiddleware({ keyPrefix: "crime-reports", duration: 300 }),
   CrimeReportController.getAllCrimeReports
 );
 
@@ -38,20 +37,19 @@ router.get(
 router.get(
   "/user-reports",
   Auth(userRole.admin, userRole.user),
-  cacheMiddleware({ keyPrefix: "user-reports", duration: 300 }),
+  cacheMiddleware({ keyPrefix: "user-reports" }),
   CrimeReportController.getUserReports
 );
 router.get(
   "/profile-reports/:userId",
   Auth(userRole.admin, userRole.user),
-  cacheMiddleware({ keyPrefix: "profile-reports", duration: 300 }),
+  cacheMiddleware({ keyPrefix: "profile-reports" }),
   CrimeReportController.getProfileReports
 );
 
 router.get(
   "/:id",
   Auth(userRole.admin, userRole.user),
-  cacheMiddleware({ keyPrefix: "crime-report", duration: 300 }),
   CrimeReportController.getCrimeReportById
 );
 

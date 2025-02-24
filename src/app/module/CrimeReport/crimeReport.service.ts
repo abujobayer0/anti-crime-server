@@ -8,6 +8,8 @@ import { COMMENT_POPULATE_CONFIG } from "./crimeReport.config";
 import User from "../Auth/auth.model";
 import { TUser } from "../Auth/auth.interface";
 import { ObjectId } from "mongoose";
+import { NotificationType } from "../Notification/notification.interface";
+import notificationService from "../Notification/notification.service";
 
 export class CrimeReportService {
   static async createCrimeReport(
@@ -220,7 +222,7 @@ export class CrimeReportService {
     userId: string,
     voteType: "upvote" | "downvote"
   ) {
-    const report = await CrimeReport.findById(reportId);
+    const report = await CrimeReport.findById(reportId).populate("userId");
 
     if (!report) {
       throw new AppError(httpStatus.NOT_FOUND, "Crime report not found");
@@ -235,7 +237,9 @@ export class CrimeReportService {
       );
     }
 
-    if (report[currentVoteType].includes(userId)) {
+    const isAddingVote = !report[currentVoteType].includes(userId);
+
+    if (!isAddingVote) {
       report[currentVoteType] = report[currentVoteType].filter(
         (id) => id.toString() !== userId
       );
@@ -244,6 +248,21 @@ export class CrimeReportService {
     }
 
     await report.save();
+
+    if (isAddingVote) {
+      const voter = await User.findById(userId);
+      await notificationService.createNotification({
+        recipient: report.userId._id.toString(),
+        sender: userId,
+        type:
+          voteType === "upvote"
+            ? NotificationType.UPVOTE
+            : NotificationType.DOWNVOTE,
+        title: voteType === "upvote" ? "New Upvote" : "New Downvote",
+        message: `${voter?.name} ${voteType}d your report: ${report.title}`,
+        relatedReport: reportId,
+      });
+    }
 
     return {
       upvotes: report.upvotes.length,

@@ -1,5 +1,7 @@
+import { TUser } from "../Auth/auth.interface";
+import { Types } from "mongoose";
 export interface ICrimeReport {
-  userId: string;
+  userId: Types.ObjectId | TUser;
   title: string;
   description: string;
   images?: string[];

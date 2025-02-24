@@ -1,6 +1,9 @@
+import { Types } from "mongoose";
+
 type TUserRole = "admin" | "user";
 
 export interface TUser {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;

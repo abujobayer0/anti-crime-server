@@ -3,7 +3,10 @@ import { Comment } from "./comment.model";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { CrimeReport } from "../CrimeReport/crimeReport.model";
+import NotificationService from "../Notification/notification.service";
+import { NotificationType } from "../Notification/notification.interface";
 
+import User from "../Auth/auth.model";
 export class CommentService {
   static async createComment(
     reportId: string,
@@ -14,7 +17,8 @@ export class CommentService {
       replyTo?: string;
     }
   ): Promise<IComment | null> {
-    const report = await CrimeReport.findById(reportId);
+    const report = await CrimeReport.findById(reportId).populate("userId");
+    const user = await User.findById(userId).select("name profileImage");
     if (!report) {
       throw new AppError(httpStatus.NOT_FOUND, "Crime Report not found");
     }
@@ -41,7 +45,21 @@ export class CommentService {
         },
         { new: true }
       );
-
+      await NotificationService.createNotification({
+        recipient:
+          parentComment.userId.toString() === userId
+            ? report.userId._id.toString()
+            : parentComment.userId.toString(),
+        sender: userId,
+        type: NotificationType.REPLY,
+        title: replyComment.comment,
+        message:
+          parentComment.userId.toString() === userId
+            ? `${user?.name} replied their own comment on your report: ${report.title}`
+            : `${user?.name} replied to your comment: ${parentComment.comment}`,
+        relatedReport: reportId,
+        relatedComment: replyComment._id.toString(),
+      });
       return replyComment;
     }
 
@@ -55,6 +73,18 @@ export class CommentService {
 
     if (!updatedReport) {
       throw new AppError(httpStatus.NOT_FOUND, "Failed to update crime report");
+    }
+
+    if (report && report.userId._id.toString() !== userId) {
+      await NotificationService.createNotification({
+        recipient: report.userId._id.toString(),
+        sender: userId,
+        type: NotificationType.COMMENT,
+        title: comment.comment,
+        message: `${user?.name} commented on your report: ${report.title}`,
+        relatedReport: reportId,
+        relatedComment: comment._id.toString(),
+      });
     }
 
     return comment;
