@@ -9,8 +9,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "./auth.model";
 import { sendEmail } from "../../utils/sendMail";
-import { CrimeReport } from "../CrimeReport/crimeReport.model";
-import { ICrimeReport } from "../CrimeReport/crimeReport.interface";
 
 const registerUserIntoDB = async (payload: Partial<TUser>) => {
   const existingUser = await User.findOne({ email: payload.email });
