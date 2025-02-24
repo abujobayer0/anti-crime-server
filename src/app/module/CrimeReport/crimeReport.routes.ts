@@ -11,13 +11,14 @@ router.post(
   clearCache("crime-reports"),
   CrimeReportController.createCrimeReport
 );
-
 router.post(
   "/analyze",
   Auth(userRole.admin, userRole.user),
   clearCache("crime-reports"),
   CrimeReportController.analyzeCrimeReport
 );
+
+router.get("/health", CrimeReportController.getHealth);
 
 router.get(
   "/",

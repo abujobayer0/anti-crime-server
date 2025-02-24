@@ -7,6 +7,14 @@ import AppError from "../../errors/AppError";
 import { ObjectId } from "mongoose";
 
 export class CrimeReportController {
+  static getHealth = catchAsync(async (req: Request, res: Response) => {
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Health check passed",
+    });
+  });
+
   static createCrimeReport = catchAsync(async (req: Request, res: Response) => {
     const report = await CrimeReportService.createCrimeReport(req.body);
     sendResponse(res, {
