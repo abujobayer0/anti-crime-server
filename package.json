@@ -12,8 +12,25 @@
     "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
     "prettier:fix": "npx prettier --write src"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "anti-crime",
+    "crime",
+    "crime-report",
+    "crime-detection",
+    "crime-analysis",
+    "crime-reporting",
+    "crime-reporting-system",
+    "crime-reporting-app",
+    "crime-reporting-api",
+    "crime-reporting-backend",
+    "crime-reporting-frontend",
+    "crime-reporting-full-stack",
+    "crime-reporting-full-stack-app",
+    "crime-reporting-full-stack-api",
+    "crime-reporting-full-stack-backend",
+    "crime-reporting-full-stack-frontend"
+  ],
+  "author": "Abu Talha Md Jobayer",
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
