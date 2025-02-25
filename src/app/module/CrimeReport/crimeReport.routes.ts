@@ -5,19 +5,6 @@ import { userRole } from "../Auth/auth.utils";
 import { cacheMiddleware, clearCache } from "../../middlewares/cache.redis";
 const router = express.Router();
 
-router.post(
-  "/",
-  Auth(userRole.admin, userRole.user),
-  clearCache("crime-reports"),
-  CrimeReportController.createCrimeReport
-);
-router.post(
-  "/analyze",
-  Auth(userRole.admin, userRole.user),
-  clearCache("crime-reports"),
-  CrimeReportController.analyzeCrimeReport
-);
-
 router.get("/health", CrimeReportController.getHealth);
 
 router.get(
@@ -40,6 +27,21 @@ router.get(
   Auth(userRole.admin, userRole.user),
   cacheMiddleware({ keyPrefix: "user-reports" }),
   CrimeReportController.getUserReports
+);
+
+router.post(
+  "/",
+  Auth(userRole.admin, userRole.user),
+  clearCache("crime-reports"),
+  clearCache("recent-reports"),
+  CrimeReportController.createCrimeReport
+);
+
+router.post(
+  "/analyze",
+  Auth(userRole.admin, userRole.user),
+  clearCache("crime-reports"),
+  CrimeReportController.analyzeCrimeReport
 );
 router.get(
   "/profile-reports/:userId",

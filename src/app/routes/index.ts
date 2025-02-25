@@ -4,7 +4,7 @@ import { UserRoutes } from "../module/User/user.routes";
 import { CrimeReportRoutes } from "../module/CrimeReport/crimeReport.routes";
 import { CommentRoutes } from "../module/Comment/comment.routes";
 import { NotificationRoutes } from "../module/Notification/notification.routes";
-
+import { FollowersRoutes } from "../module/Followers/followers.routes";
 const router = Router();
 
 const moduleRoutes = [
@@ -27,6 +27,10 @@ const moduleRoutes = [
   {
     path: "/notifications",
     route: NotificationRoutes,
+  },
+  {
+    path: "/followers",
+    route: FollowersRoutes,
   },
 ];
 

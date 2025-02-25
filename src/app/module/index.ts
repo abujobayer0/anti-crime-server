@@ -35,6 +35,12 @@ const notificationIndexes = async () => {
     type: 1,
   });
 };
+const followersIndexes = async () => {
+  const { Followers } = await import("./Followers/followers.model");
+  await Followers.collection.createIndex({ userId: 1 });
+  await Followers.collection.createIndex({ userId: 1, following: 1 });
+  await Followers.collection.createIndex({ userId: 1, followers: 1 });
+};
 const initializeIndexes = async () => {
   try {
     await Promise.all([
@@ -42,6 +48,7 @@ const initializeIndexes = async () => {
       crimeReportIndexes(),
       commentIndexes(),
       notificationIndexes(),
+      followersIndexes(),
     ]);
     console.log("Database indexes created successfully");
   } catch (error) {

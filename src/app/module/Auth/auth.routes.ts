@@ -5,21 +5,18 @@ import { AuthController } from "./auth.controller";
 import { UserValidation } from "./auth.validation";
 import { userRole } from "./auth.utils";
 import Auth from "../../middlewares/auth";
-import { clearCache } from "../../middlewares/cache.redis";
 
 const router = express.Router();
 
 router.post(
   "/register",
   validateRequest(UserValidation.registerUserValidationSchema),
-  clearCache("users"),
   AuthController.register
 );
 
 router.post(
   "/login",
   validateRequest(UserValidation.loginUserValidationSchema),
-  clearCache("users"),
   AuthController.login
 );
 
