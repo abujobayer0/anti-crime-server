@@ -9,7 +9,7 @@ router.get("/health", CrimeReportController.getHealth);
 
 router.get(
   "/",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   CrimeReportController.getAllCrimeReports
 );
 
@@ -17,21 +17,21 @@ router.get("/query", CrimeReportController.queryCrimeReports);
 
 router.get(
   "/recent-reports",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   cacheMiddleware({ keyPrefix: "recent-reports", duration: 60 }),
   CrimeReportController.getRecentReports
 );
 
 router.get(
   "/user-reports",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   cacheMiddleware({ keyPrefix: "user-reports" }),
   CrimeReportController.getUserReports
 );
 
 router.post(
   "/",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   clearCache("recent-reports"),
   CrimeReportController.createCrimeReport
@@ -39,46 +39,46 @@ router.post(
 
 router.post(
   "/analyze",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CrimeReportController.analyzeCrimeReport
 );
 router.get(
   "/profile-reports/:userId",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   cacheMiddleware({ keyPrefix: "profile-reports" }),
   CrimeReportController.getProfileReports
 );
 
 router.get(
   "/:id",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   CrimeReportController.getCrimeReportById
 );
 
 router.patch(
   "/:id",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CrimeReportController.updateCrimeReport
 );
 router.delete(
   "/:id",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CrimeReportController.deleteCrimeReport
 );
 
 router.post(
   "/:id/upvote",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CrimeReportController.toggleUpvote
 );
 
 router.post(
   "/:id/downvote",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CrimeReportController.toggleDownvote
 );

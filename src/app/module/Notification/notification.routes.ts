@@ -6,23 +6,23 @@ const router = express.Router();
 
 router.get(
   "/",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   NotificationController.getNotifications
 );
 router.patch(
   "/mark-all-read",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   NotificationController.markAllAsRead
 );
 
 router.patch(
   "/read/:id",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   NotificationController.markAsRead
 );
 router.delete(
   "/:id",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   NotificationController.deleteNotification
 );
 

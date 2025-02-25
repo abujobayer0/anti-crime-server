@@ -7,19 +7,19 @@ const router = Router();
 
 router.post(
   "/:reportId/comment",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CommentController.createComment
 );
 router.patch(
   "/:commentId/update",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CommentController.updateComment
 );
 router.delete(
   "/:commentId/delete",
-  Auth(userRole.admin, userRole.user),
+  Auth(userRole.user, userRole.admin),
   clearCache("crime-reports"),
   CommentController.deleteComment
 );
