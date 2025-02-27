@@ -19,6 +19,99 @@
   <a href="#contributing">Contributing</a>
 </p>
 
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    Client[Client Applications] --> API[API Gateway/Express.js]
+
+    %% Core Services
+    API --> Auth[Authentication Service]
+    API --> Report[Report Service]
+    API --> Notify[Notification Service]
+    API --> Media[Media Service]
+
+    %% Data Layer
+    Auth --> MongoDB[(MongoDB)]
+    Report --> MongoDB
+    Notify --> MongoDB
+
+    %% Caching Layer
+    Auth --> Redis[(Redis Cache)]
+    Report --> Redis
+
+    %% External Services
+    Media --> Cloudinary[Cloudinary Storage]
+    Report --> AI[AI Analysis Service]
+    Notify --> Email[Email Service]
+
+    %% Real-time Communications
+    API --> Socket[Socket.IO]
+    Socket --> Client
+
+    %% Security Layer
+    Security[Security Middleware] --> API
+    Security --> RateLimit[Rate Limiting]
+    Security --> CORS[CORS]
+    Security --> JWT[JWT Auth]
+```
+
+### Architecture Components
+
+<details>
+<summary>🌐 Client Interface Layer</summary>
+
+- REST API Endpoints
+- WebSocket Connections
+- Real-time Updates
+- Request/Response Handling
+</details>
+
+<details>
+<summary>🔐 Security Layer</summary>
+
+- JWT Authentication
+- Rate Limiting
+- CORS Protection
+- Input Validation
+</details>
+
+<details>
+<summary>🛠️ Core Services</summary>
+
+- Authentication Service
+- Report Management
+- Notification System
+- Media Processing
+</details>
+
+<details>
+<summary>💾 Data Management</summary>
+
+- MongoDB Database
+- Redis Caching
+- Data Persistence
+- Query Optimization
+</details>
+
+<details>
+<summary>🔌 External Integrations</summary>
+
+- Cloudinary Storage
+- Email Service
+- AI Analysis
+- Push Notifications
+</details>
+
+### Key Features
+
+- **Scalable Architecture**: Microservices-ready design
+- **Real-time Updates**: Socket.IO integration
+- **Caching Strategy**: Redis implementation
+- **Security First**: Multiple security layers
+- **Cloud Storage**: Efficient media handling
+- **AI Integration**: Automated report analysis
+
 ## ✨ Features
 
 <details>
@@ -221,96 +314,3 @@ This project is licensed under the ISC License.
 <p align="center">⭐ Star this repository if you find it helpful!</p>
 
 </div>
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    Client[Client Applications] --> API[API Gateway/Express.js]
-
-    %% Core Services
-    API --> Auth[Authentication Service]
-    API --> Report[Report Service]
-    API --> Notify[Notification Service]
-    API --> Media[Media Service]
-
-    %% Data Layer
-    Auth --> MongoDB[(MongoDB)]
-    Report --> MongoDB
-    Notify --> MongoDB
-
-    %% Caching Layer
-    Auth --> Redis[(Redis Cache)]
-    Report --> Redis
-
-    %% External Services
-    Media --> Cloudinary[Cloudinary Storage]
-    Report --> AI[AI Analysis Service]
-    Notify --> Email[Email Service]
-
-    %% Real-time Communications
-    API --> Socket[Socket.IO]
-    Socket --> Client
-
-    %% Security Layer
-    Security[Security Middleware] --> API
-    Security --> RateLimit[Rate Limiting]
-    Security --> CORS[CORS]
-    Security --> JWT[JWT Auth]
-```
-
-### Architecture Components
-
-<details>
-<summary>🌐 Client Interface Layer</summary>
-
-- REST API Endpoints
-- WebSocket Connections
-- Real-time Updates
-- Request/Response Handling
-</details>
-
-<details>
-<summary>🔐 Security Layer</summary>
-
-- JWT Authentication
-- Rate Limiting
-- CORS Protection
-- Input Validation
-</details>
-
-<details>
-<summary>🛠️ Core Services</summary>
-
-- Authentication Service
-- Report Management
-- Notification System
-- Media Processing
-</details>
-
-<details>
-<summary>💾 Data Management</summary>
-
-- MongoDB Database
-- Redis Caching
-- Data Persistence
-- Query Optimization
-</details>
-
-<details>
-<summary>🔌 External Integrations</summary>
-
-- Cloudinary Storage
-- Email Service
-- AI Analysis
-- Push Notifications
-</details>
-
-### Key Features
-
-- **Scalable Architecture**: Microservices-ready design
-- **Real-time Updates**: Socket.IO integration
-- **Caching Strategy**: Redis implementation
-- **Security First**: Multiple security layers
-- **Cloud Storage**: Efficient media handling
-- **AI Integration**: Automated report analysis
