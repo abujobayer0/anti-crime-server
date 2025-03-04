@@ -8,6 +8,12 @@ export class UserService {
     return await User.find({ isDeleted: false }).select("-password");
   }
 
+  static async getBannedUsers(): Promise<TUser[]> {
+    return await User.find({ isDeleted: false, isBanned: true }).select(
+      "-password"
+    );
+  }
+
   static async getUserById(id: string): Promise<TUser | null> {
     const user = await User.findById(id).select("-password");
     if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");

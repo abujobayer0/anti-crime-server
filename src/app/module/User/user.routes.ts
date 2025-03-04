@@ -10,6 +10,11 @@ router.get(
   Auth(userRole.user, userRole.admin),
   UserController.getAllUsers
 );
+router.get(
+  "/get-banned-users",
+  Auth(userRole.user, userRole.admin),
+  UserController.getBannedUsers
+);
 
 router.get(
   "/get-me",

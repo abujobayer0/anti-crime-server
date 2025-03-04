@@ -14,6 +14,16 @@ export class UserController {
     });
   }
 
+  static async getBannedUsers(req: Request, res: Response) {
+    const users = await UserService.getBannedUsers();
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Banned users fetched successfully",
+      data: users,
+    });
+  }
+
   static async getMe(req: Request, res: Response) {
     const users = await UserService.getMeForDB(req.user.id);
     sendResponse(res, {
