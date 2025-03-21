@@ -33,6 +33,9 @@
   "author": "Abu Talha Md Jobayer",
   "license": "ISC",
   "dependencies": {
+    "@airbnb/node-memwatch": "^3.0.0",
+    "@sentry/node": "^9.8.0",
+    "@sentry/profiling-node": "^9.8.0",
     "@types/morgan": "^1.9.9",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",

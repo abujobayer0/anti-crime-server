@@ -17,4 +17,5 @@ export default {
   reset_link_url: process.env.RESET_lINK_URL,
   email_user: process.env.EMAIL_USER,
   email_app_password: process.env.EMAIL_APP_PASSWORD,
+  SENTRY_DSN: process.env.SENTRY_DSN,
 };
