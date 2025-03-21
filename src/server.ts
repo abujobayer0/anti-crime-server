@@ -415,23 +415,6 @@ if (cluster.isPrimary) {
   // Main worker function
   async function workerMain(): Promise<void> {
     try {
-      // Setup performance monitoring
-      if (process.env.NODE_ENV === "production") {
-        // Use memory leak detection in production
-        try {
-          const memwatch = require("@airbnb/node-memwatch");
-          memwatch.on("leak", (info: any) => {
-            logToMaster(
-              "warn",
-              `Memory leak detected in worker ${process.pid}:`,
-              info
-            );
-          });
-        } catch (e) {
-          logToMaster("warn", "Memwatch not available for leak detection");
-        }
-      }
-
       // Connect to database with retry mechanism
       const connected: boolean = await connectWithRetry();
       if (!connected) {
