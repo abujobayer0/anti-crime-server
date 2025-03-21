@@ -33,7 +33,6 @@
   "author": "Abu Talha Md Jobayer",
   "license": "ISC",
   "dependencies": {
-    "@airbnb/node-memwatch": "^3.0.0",
     "@sentry/node": "^9.8.0",
     "@sentry/profiling-node": "^9.8.0",
     "@types/morgan": "^1.9.9",
