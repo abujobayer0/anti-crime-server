@@ -48,9 +48,11 @@ const forgetPassword = catchAsync(async (req, res) => {
 
 const changePassword = catchAsync(async (req, res) => {
   const token = req.headers.authorization;
+  const tokenWithoutBearer = token?.split(" ")[1];
   const result = await AuthServices.changePasswordIntoDB(
     req.body,
-    token as string
+    req.user.email,
+    tokenWithoutBearer as string
   );
 
   sendResponse(res, {

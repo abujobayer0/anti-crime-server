@@ -25,25 +25,6 @@ export class CrimeReportController {
     });
   });
 
-  static analyzeCrimeReport = catchAsync(
-    async (req: Request, res: Response) => {
-      const report = await CrimeReportService.analyzeCrimeReport(
-        req.body as {
-          imageUrl: string[];
-          division: string;
-          district: string;
-        }
-      );
-
-      sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Crime report analyzed successfully",
-        data: report,
-      });
-    }
-  );
-
   static queryCrimeReports = catchAsync(async (req: Request, res: Response) => {
     const query = req.query.searchTerm as string;
     const reports = await CrimeReportService.queryCrimeReports(query);
@@ -104,6 +85,18 @@ export class CrimeReportController {
         statusCode: httpStatus.OK,
         success: true,
         message: "Crime reports fetched successfully",
+        data: reports,
+      });
+    }
+  );
+
+  static getAllAlgorithmicReports = catchAsync(
+    async (req: Request, res: Response) => {
+      const reports = await CrimeReportService.getAllAlgorithmicReports();
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Algorithmic Crime Reports reports fetched successfully",
         data: reports,
       });
     }

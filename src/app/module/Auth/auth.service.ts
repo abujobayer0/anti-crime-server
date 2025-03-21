@@ -139,7 +139,7 @@ const resetLinkIntoDB = async ({ email }: { email: string }) => {
   const resetLink = `${config.reset_link_url}?email=${user.email}&token=${resetToken}`;
 
   // Send email to the user with the reset link
-  await sendEmail(user.email, resetLink);
+  await sendEmail(user.email, resetLink, user);
 };
 
 const forgotPasswordIntoDB = async (payload: {
@@ -190,18 +190,18 @@ const forgotPasswordIntoDB = async (payload: {
 
   return result;
 };
-
 const changePasswordIntoDB = async (
-  payload: { email: string; newPassword: string },
+  payload: { currentPassword: string; newPassword: string },
+  email: string,
   token: string
 ) => {
-  const user = await User.findOne({ email: payload?.email });
+  const user = await User.findOne({ email: email });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "This user is not found!");
   }
 
-  if (user.isDeleted === true) {
+  if (user.isDeleted) {
     throw new AppError(httpStatus.FORBIDDEN, "This user is deleted!");
   }
 
@@ -209,15 +209,26 @@ const changePasswordIntoDB = async (
     throw new AppError(httpStatus.FORBIDDEN, "This user is blocked!");
   }
 
-  // Check if token is valid
   const decoded = jwt.verify(token, config.jwt_access_secret as string) as {
     id: string;
     email: string;
     role: string;
   };
 
-  if (payload.email !== decoded.email) {
+  if (email !== decoded.email) {
     throw new AppError(httpStatus.FORBIDDEN, "This user is forbidden!");
+  }
+
+  const isCurrentPasswordCorrect = await bcrypt.compare(
+    payload.currentPassword,
+    user.password
+  );
+
+  if (!isCurrentPasswordCorrect) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "Current password is incorrect!"
+    );
   }
 
   const newHashPassword = await bcrypt.hash(
@@ -227,9 +238,7 @@ const changePasswordIntoDB = async (
 
   const result = await User.findOneAndUpdate(
     { _id: decoded.id, role: decoded.role },
-    {
-      password: newHashPassword,
-    },
+    { password: newHashPassword },
     { new: true }
   );
 

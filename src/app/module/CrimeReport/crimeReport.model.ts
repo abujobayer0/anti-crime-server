@@ -5,6 +5,7 @@ const crimeReportSchema = new Schema<ICrimeReport>(
   {
     userId: { type: String, required: true, ref: "User" },
     title: { type: String, required: true },
+    crimeType: { type: String, required: true },
     description: { type: String, required: true },
     images: [{ type: String }],
     video: { type: String },

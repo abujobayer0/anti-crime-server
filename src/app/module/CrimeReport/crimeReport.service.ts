@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import { CrimeReport } from "./crimeReport.model";
 import AppError from "../../errors/AppError";
 import QueryBuilder from "../../builder/queryBuilder";
-import { NvidiaImageDescription } from "../../../hooks/nvidia.neva-22b";
+
 import { COMMENT_POPULATE_CONFIG } from "./crimeReport.config";
 import User from "../Auth/auth.model";
 import { TUser } from "../Auth/auth.interface";
@@ -19,6 +19,20 @@ export class CrimeReportService {
   }
 
   static async getAllCrimeReports(): Promise<ICrimeReport[]> {
+    const reports = await CrimeReport.find({ isDeleted: false })
+      .populate("userId")
+      .populate(COMMENT_POPULATE_CONFIG)
+      .populate("upvotes")
+      .populate("downvotes")
+      .sort({ createdAt: -1 });
+
+    if (!reports) {
+      throw new AppError(httpStatus.NOT_FOUND, "Crime Reports not found");
+    }
+    return reports;
+  }
+
+  static async getAllAlgorithmicReports(): Promise<ICrimeReport[]> {
     return await this.getAlgorithmicReports();
   }
 
@@ -175,46 +189,6 @@ export class CrimeReportService {
     ];
 
     return results;
-  }
-
-  static async analyzeCrimeReport(data: {
-    imageUrl: string[];
-    division: string;
-    district: string;
-  }) {
-    const { imageUrl, division, district } = data;
-
-    const requiredParams = {
-      imageUrl,
-      division,
-      district,
-    };
-
-    for (const [param, value] of Object.entries(requiredParams)) {
-      if (!value) {
-        console.log(`${param} is a mandatory parameter`);
-        throw new AppError(
-          httpStatus.BAD_REQUEST,
-          `Missing required parameter: ${param}`
-        );
-      }
-    }
-
-    try {
-      const report = await NvidiaImageDescription(
-        imageUrl[0] as string,
-        division as string,
-        district as string
-      );
-
-      return report;
-    } catch (err) {
-      console.error(err);
-      throw new AppError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Failed to generate the report"
-      );
-    }
   }
 
   static async toggleVote(
