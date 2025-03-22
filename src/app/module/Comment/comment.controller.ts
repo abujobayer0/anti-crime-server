@@ -23,7 +23,12 @@ export class CommentController {
 
   static updateComment = catchAsync(async (req: Request, res: Response) => {
     const { commentId } = req.params;
-    const comment = await CommentService.updateComment(commentId, req.body);
+    const userId = req.user?.id;
+    const comment = await CommentService.updateComment(
+      commentId,
+      userId,
+      req.body
+    );
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -33,7 +38,8 @@ export class CommentController {
   });
   static deleteComment = catchAsync(async (req: Request, res: Response) => {
     const { commentId } = req.params;
-    const comment = await CommentService.deleteComment(commentId);
+    const userId = req.user?.id;
+    const comment = await CommentService.deleteComment(commentId, userId);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
