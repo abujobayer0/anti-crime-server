@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
-import { UserService } from "./user.services";
+import { UserService } from "./user.service";
 
 export class UserController {
   static async getAllUsers(req: Request, res: Response) {
