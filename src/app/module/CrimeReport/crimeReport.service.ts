@@ -35,6 +35,9 @@ export class CrimeReportService {
     data: Partial<ICrimeReport>
   ): Promise<ICrimeReport> {
     try {
+      if (Array.isArray(data.crimeType)) {
+        data.crimeType = data.crimeType.join(", ");
+      }
       return await CrimeReport.create(data);
     } catch (error: any) {
       this.logger.error("Error creating crime report:", error);
