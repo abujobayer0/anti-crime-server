@@ -346,7 +346,7 @@ if (cluster.isPrimary) {
 
       trackConnections(server);
 
-      server.listen(config.port, () => {
+      server.listen({ port: config.port, host: "0.0.0.0" }, () => {
         isReady = true;
         const banner = new ServerBanner(
           logger,
