@@ -308,10 +308,6 @@ class DatabaseIndexingService {
 
       this.logger.info("All database indexes created successfully");
     } catch (error: any) {
-      this.logger.error(
-        `Failed to initialize database indexes: ${error.message}`,
-        error
-      );
       throw error;
     }
   }

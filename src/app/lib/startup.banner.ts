@@ -92,12 +92,7 @@ export class ServerBanner {
       });
 
       console.log(boxedBanner);
-
-      this.logger.info(
-        `${this.appName} v${this.version} started on port ${port} (${this.environment})`
-      );
     } catch (error) {
-      this.logger.warn("Failed to display fancy banner", { error });
       this.displaySimpleBanner(port);
     }
   }
@@ -143,10 +138,6 @@ export class ServerBanner {
     `;
 
     console.log(message);
-
-    this.logger.info(
-      `${this.appName} v${this.version} started on port ${port} (${this.environment})`
-    );
   }
 
   /**
