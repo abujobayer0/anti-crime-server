@@ -30,6 +30,21 @@ export class BookmarkController {
       data: bookmark,
     });
   });
+  static checkBookmarked = catchAsync(async (req: Request, res: Response) => {
+    const { reportId } = req.query;
+    const userId = req.user.id;
+    const bookmark = await BookmarkService.isReportBookmarked(
+      reportId as string,
+      userId
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Bookmark checked successfully",
+      data: bookmark,
+    });
+  });
 
   static deleteBookmark = catchAsync(async (req: Request, res: Response) => {
     const { bookmarkId } = req.params;

@@ -4,14 +4,21 @@
   "description": "",
   "main": "./dist/server.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node ./dist/server.js",
+    "build": "rimraf dist && tsc",
+    "start": "nodemon ./src/server.ts",
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
     "lint": "npm eslint .",
     "lint:fix": "npx eslint src --fix",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
     "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
     "prettier:fix": "npx prettier --write src"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "keywords": [
     "anti-crime",
     "crime",
@@ -53,6 +60,8 @@
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.10.0",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^6.0.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.23.8"

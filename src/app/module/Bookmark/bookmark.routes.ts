@@ -9,6 +9,11 @@ router.get(
   Auth(userRole.user, userRole.admin),
   BookmarkController.getBookmarks
 );
+router.get(
+  "/reportId",
+  Auth(userRole.user, userRole.admin),
+  BookmarkController.checkBookmarked
+);
 
 router.post(
   "/:reportId",

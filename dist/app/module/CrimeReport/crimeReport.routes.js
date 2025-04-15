@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CrimeReportRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const crimeReport_controller_1 = require("./crimeReport.controller");
+const auth_1 = __importDefault(require("../../middlewares/auth"));
+const auth_utils_1 = require("../Auth/auth.utils");
+const router = express_1.default.Router();
+router.get("/health", crimeReport_controller_1.CrimeReportController.getHealth);
+router.get("/", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.getAllCrimeReports);
+router.get("/algorithmic-reports", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.getAllAlgorithmicReports);
+router.get("/query", crimeReport_controller_1.CrimeReportController.queryCrimeReports);
+router.get("/recent-reports", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.getRecentReports);
+router.get("/user-reports", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.getUserReports);
+router.post("/", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.createCrimeReport);
+router.get("/profile-reports/:userId", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.getProfileReports);
+router.get("/:id", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.getCrimeReportById);
+router.patch("/:id", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.updateCrimeReport);
+router.delete("/:id", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.deleteCrimeReport);
+router.post("/:id/upvote", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.toggleUpvote);
+router.post("/:id/downvote", (0, auth_1.default)(auth_utils_1.userRole.user, auth_utils_1.userRole.admin), crimeReport_controller_1.CrimeReportController.toggleDownvote);
+exports.CrimeReportRoutes = router;
